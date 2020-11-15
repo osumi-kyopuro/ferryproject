@@ -1,0 +1,125 @@
+<!doctype html>
+    <html lang="ja">
+        <head>
+            
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="../attendance2">室八クイズ</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="../attendance2">TOPページ <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    問題
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href='../attendance2/list'>クイズページ</a>
+                                    {% if request.user.is_superuser %}
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="../attendance2/user_search">スタッフ別個人シフトデータ</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="../attendance2/mylist">自分のシフトデータ</a>
+                                    {% endif %}
+                                </div>
+                            </li>
+                            
+    
+                            {% if request.user.is_superuser %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        シフト追加
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href='../attendance2/add_shift'>一件追加</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="../attendance2/add_manyshift">複数件追加</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="../attendance2/delete_menu">シフト削除</a> <span class="sr-only">(current)</span></a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        <ul style="list-style: none;">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{request.user}}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href='mylist'>個人シフトデータ</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+            </nav>
+            
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+            <title>TOPページ - 室八クイズ</title>
+        </head>
+        <body>
+            <!--<h1>Hello, world!</h1>-->
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        </body>
+    </html>
+
+
+<!DOCTYPE html>
+<html>
+<!--container--> 
+<!--{% block header %}-->
+    <div class="w-auto p-2" style="background-color: #eee;">
+        <div class="container">
+            <nav aria-label="パンくずリスト">
+                <div class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <h6>TOPページ</h6>
+                    </li>
+                </div>
+                <h4>TOPページ</h4>
+            </nav>
+            <!--<h5 class='display-5'>TOPページ</h5>-->
+        </div>
+</div>
+<!--{% endblock header %}-->
+
+
+    <div class="py-3">
+        <div class="container">
+            {% if user.is_authenticated %}
+                <p>こんにちは、{{ message }}さん！！<p />
+                <p>問題を解いていきましょう。<p />
+                {% if data_flag == False and request.user.is_superuser%}
+                    <a href='shift_addition_menu' class='btn btn-info'>シフト追加</a><p />
+                    
+                {% endif %}
+                {% if attend_flag %}
+                    <a href='attend_time' class='btn btn-primary'>出勤</a><p />
+                {% endif %}
+                {% if leave_flag %}
+                    <a href='leave_time' class='btn btn-primary'>退勤</a><p />
+                {% endif %}
+            {% else %}
+                <p><a href="{% url 'login' %}" class="btn btn-info">ログイン</a></p>
+            {% endif %}
+        <div>
+    <div>
+
+</html>
